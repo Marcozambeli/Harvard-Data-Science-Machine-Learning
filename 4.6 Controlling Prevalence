@@ -1,0 +1,22 @@
+Key points
+The Naive Bayes approach includes a parameter to account for differences in prevalence 𝜋=𝑃𝑟(𝑌=1). If we use hats to denote the estimates, we can write 𝑝(𝑥)^ as: 
+𝑝̂ (𝑥)=𝑃𝑟(𝑌=1|𝑋=𝑥)=𝑓̂ 𝑋|𝑌=1(𝑥)𝜋̂ 𝑓̂ 𝑋|𝑌=0(𝑥)(1−𝜋̂ )+𝑓̂ 𝑋|𝑌=1(𝑥)𝑃𝑟(𝑌=1)
+The Naive Bayes approach gives us a direct way to correct the imbalance between sensitivity and specificity by simply forcing 𝜋̂  to be whatever value we want it to be in order to better balance specificity and sensitivity. 
+Code
+# Computing sensitivity
+y_hat_bayes <- ifelse(p_hat_bayes > 0.5, "Female", "Male")
+sensitivity(data = factor(y_hat_bayes), reference = factor(test_set$sex))
+
+# Computing specificity
+specificity(data = factor(y_hat_bayes), reference = factor(test_set$sex))
+
+# Changing the cutoff of the decision rule
+p_hat_bayes_unbiased <- f1 * 0.5 / (f1 * 0.5 + f0 * (1 - 0.5))
+y_hat_bayes_unbiased <- ifelse(p_hat_bayes_unbiased > 0.5, "Female", "Male")
+sensitivity(data = factor(y_hat_bayes_unbiased), reference = factor(test_set$sex))
+specificity(data = factor(y_hat_bayes_unbiased), reference = factor(test_set$sex))
+
+# Draw plot
+qplot(x, p_hat_bayes_unbiased, geom = "line") +
+ geom_hline(yintercept = 0.5, lty = 2) +
+ geom_vline(xintercept = 67, lty = 2)
